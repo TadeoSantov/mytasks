@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react'
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 function CreateContent() {
 
@@ -22,18 +24,39 @@ function CreateContent() {
                 setDate(e.target.value);
                 break;
             case "completed":
-                setCompleted(e.target.value);
+                setCompleted(e.target.checked);
                 break;
             case "important":
-                setImportant(e.target.value);
+                setImportant(e.target.checked);
                 break;
             default:
                 break;
         }
     };
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
+
+        const task = {
+            title,
+            description,
+            date,
+            completed,
+            important,
+        };
+
+        try {
+            const res = await axios.post("/api/tasks", task);
+
+            if(res.data.error){
+                toast.error(res.data.error);
+            }
+
+            toast.success("Task created successfully");
+        } catch (error) {
+            toast.error("Something went wrong");
+            console.log(error);
+        }
     };
         
     return (
