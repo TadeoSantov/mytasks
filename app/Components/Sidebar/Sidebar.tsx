@@ -4,16 +4,22 @@ import styled from 'styled-components';
 import {useGlobalState} from "@/app/context/globalProvider";
 import Image from 'next/image';
 import Link from 'next/link';
-
+import Button from '../Button/Button';
 import  menu from "@/app/utils/menu"
 import { usePathname, useRouter } from 'next/navigation';
 import path from 'path';
+import { logout } from '@/app/utils/Icons';
+import { UserButton, useClerk, useUser } from '@clerk/nextjs';
 
 function Sidebar() {
   const {theme} = useGlobalState();
 
   const router = useRouter();
   const pathname = usePathname();
+  const { signOut } = useClerk(); 
+  const {user} = useUser();
+  const {firstName, lastName, imageUrl} = user || {firstName:"", lastName: "", imageUrl: ""};
+
 
   const handleClick = (link: string) => {
     router.push(link)
@@ -22,21 +28,25 @@ function Sidebar() {
   return <SidebarStyled theme={theme}>
     <div className="profile">
       <div className="profile-overlay"></div>
-      <div className="img">
-        <Image width = {70} height={70} src="/avatar1.png" alt="profile"/>
+      <div className="image">
+        <Image width = {70} height={70} src={imageUrl} alt="profile"/>
       </div>
-      <h1>
-        <span>Sin</span>
-        <span>Rostro</span>
+      <div className="user-btn absolute z-20 top-0 w-full h-full">
+          <UserButton />
+        </div>
+      <h1 className='capitalize'>
+        {firstName} {lastName}
       </h1>
-    </div>
+      </div>
     <ul className="nav-items">
       {menu.map((item) => {  
 
         const link = item.link;
 
         return (
-        <li className={`nav-item ${pathname === link ? "active" : "" }`} onClick={() => {
+        <li 
+        key={item.id}
+        className={`nav-item ${pathname === link ? "active" : "" }`} onClick={() => {
           handleClick(link)
         }}>
           {item.icon}
@@ -45,10 +55,24 @@ function Sidebar() {
         );
       })}
     </ul>
-    <button></button>
+    <div className="sign-out relative mb-6" >
+      <Button
+       name={"Sign Out"}
+       type={"submit"}
+       padding={"0.4rem 0.8rem"}
+       borderRad={"0.8rem"}
+       fw={"500"}
+       fs={"1.2rem"}
+       icon={logout}
+       click={() => {
+        signOut(() => router.push("/signin"));
+       }}
+      />
+    </div>
   </SidebarStyled>;
 
 }
+
 
 const SidebarStyled = styled.nav<{ collapsed: boolean }>`
   position: relative;
@@ -124,6 +148,8 @@ const SidebarStyled = styled.nav<{ collapsed: boolean }>`
 
     display: flex;
     align-items: center;
+
+    
 
     .profile-overlay {
       position: absolute;
@@ -263,4 +289,4 @@ const SidebarStyled = styled.nav<{ collapsed: boolean }>`
 `;
 
 
-export default Sidebar
+export default Sidebar;
