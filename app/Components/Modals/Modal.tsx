@@ -1,24 +1,22 @@
 "use client";
+import { useGlobalState } from "@/app/context/globalProvider";
+import React from "react";
+import styled from "styled-components";
 
-import { useGlobalState } from '@/app/context/globalProvider';
-import React from 'react'
-import styled from 'styled-components';
-
-
-interface Props{
-    content: React.ReactNode;
+interface Props {
+  content: React.ReactNode;
 }
 
-function Modal({content}: Props) {
-    const {closeModal} = useGlobalState();
+function Modal({ content }: Props) {
+  const { closeModal } = useGlobalState();
 
-    const {theme} = useGlobalState();
-  return  ( <ModalStyled theme={theme}>
-    <div className="modal-overlay" onClick={closeModal}></div>
-        <div className="modal-content">{content}</div>
-  </ModalStyled>);
- 
-
+  const { theme } = useGlobalState();
+  return (
+    <ModalStyled theme={theme}>
+      <div className="modal-overlay" onClick={closeModal}></div>
+      <div className="modal-content">{content}</div>
+    </ModalStyled>
+  );
 }
 
 const ModalStyled = styled.div`
@@ -63,4 +61,4 @@ const ModalStyled = styled.div`
   }
 `;
 
-export default Modal
+export default Modal;

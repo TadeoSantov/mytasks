@@ -1,61 +1,67 @@
 "use client";
-import React from 'react'
-import { edit, trash } from '@/app/utils/Icons';
-import styled from 'styled-components';
-import { useGlobalState } from '@/app/context/globalProvider';
+import { useGlobalState } from "@/app/context/globalProvider";
+import { edit, trash } from "@/app/utils/Icons";
+import React from "react";
+import styled from "styled-components";
 import formatDate from "@/app/utils/formatDate";
 
-interface Props{
-    
-    title: string;
-    description: string;
-    date: string;
-    isCompleted: boolean;
-    id: string;
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+  isCompleted: boolean;
+  id: string;
 }
 
-function TaskItem({title, description, date, isCompleted, id}: Props) {
-
-    const {theme, deleteTask, updateTask} = useGlobalState();
-
-    return (
+function TaskItem({ title, description, date, isCompleted, id }: Props) {
+  const { theme, deleteTask, updateTask } = useGlobalState();
+  return (
     <TaskItemStyled theme={theme}>
-        <h1>{title}</h1>
-        <p>{description}</p>
-        <p className='date'>
-            {formatDate(date)}
-        </p>
-        <div className="task-footer">
-            {isCompleted ? (<button className='completed' 
+      <h1>{title}</h1>
+      <p>{description}</p>
+      <p className="date">{formatDate(date)}</p>
+      <div className="task-footer">
+        {isCompleted ? (
+          <button
+            className="completed"
             onClick={() => {
               const task = {
                 id,
                 isCompleted: !isCompleted,
               };
 
-              updateTask(task); 
-
-            }}>Completed</button> 
-             ) : ( 
-            <button className='incomplete'
+              updateTask(task);
+            }}
+          >
+            Completed
+          </button>
+        ) : (
+          <button
+            className="incomplete"
             onClick={() => {
               const task = {
                 id,
                 isCompleted: !isCompleted,
               };
 
-              updateTask(task); 
-
-            }}  
-            >Incomplete</button>
-            )}
-            <button className="edit">{edit}</button>
-            <button className='delete' onClick={() => {
-              deleteTask(id);
-            }}>{trash}</button>
-        </div>
-        </TaskItemStyled>
-    );
+              updateTask(task);
+            }}
+          >
+            Incomplete
+          </button>
+        )}
+        <button className="edit">{edit}</button>
+        <button
+          className="delete"
+          onClick={() => {
+            deleteTask(id);
+          }}
+        >
+          {trash}
+        </button>
+      </div>
+    </TaskItemStyled>
+  );
 }
 
 const TaskItemStyled = styled.div`
@@ -96,21 +102,21 @@ const TaskItemStyled = styled.div`
     }
 
     .edit {
-        margin-left: auto;
-      }
-  
-      .completed,
-      .incomplete {
-        display: inline-block;
-        padding: 0.4rem 1rem;
-        background: ${(props) => props.theme.colorDanger};
-        border-radius: 30px;
-      }
-  
-      .completed {
-        background: ${(props) => props.theme.colorGreenDark} !important;
-      }
+      margin-left: auto;
     }
+
+    .completed,
+    .incomplete {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: ${(props) => props.theme.colorDanger};
+      border-radius: 30px;
+    }
+
+    .completed {
+      background: ${(props) => props.theme.colorGreenDark} !important;
+    }
+  }
 `;
 
-export default TaskItem
+export default TaskItem;
